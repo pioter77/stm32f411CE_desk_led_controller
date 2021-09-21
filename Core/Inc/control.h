@@ -9,12 +9,53 @@
 #define INC_CONTROL_H_
 
 #include "main.h"
+#include "defines.h"
+
 typedef struct t_system_timebase{
 	_Bool system_1ms_tick;
 }t_System_timebase;
 
+extern volatile uint16_t adc_readouts_bufer[ADC_CONV_NUMBERS];
+
+//structure for handling light sensor readouts
+typedef struct t_light_params{
+	volatile uint16_t readout_act;		//actual readout value (raw)
+	uint16_t readout_med;				//readout value processed (after median filtration)
+	uint16_t array_med[8];				//array for holding values to filter
+	uint16_t dividerOhm;				// voltage divider resistor value
+	uint16_t sensorOhm;				// photoresistor nominal resistance value
+	unsigned short isEnabled    :1;		//flag that shows whether we should process the value and perform action on it
+	unsigned short dummy1		:1;
+	unsigned short dummy2		:1;
+	unsigned short dummy3		:1;
+}T_light_params;
+
+typedef struct t_thermal_sensor{
+	volatile uint16_t readout_act;		//actual readout value (raw)
+	uint16_t *conversion_table;			//pointer to the array that holds *C values that corresonds to analog readouts
+	uint16_t readout_med;				//readout value processed (after median filtration)
+	uint16_t array_med[8];				//array for holding values to filter
+	uint16_t dividerOhm;				// voltage divider resistor value
+	uint16_t sensorOhm;				// photoresistor nominal resistance value
+	unsigned short isEnabled    :1;		//flag that shows whether we should process the value and perform action on it
+	unsigned short isNTC		:1;		//ntc or ptc type
+	unsigned short dummy2		:1;
+	unsigned short dummy3		:1;
+}T_thermal_sensor;
+
+typedef struct t_encoder{
+	volatile unsigned short isBtnPressed			:1;			//set in ButtonCallback
+	unsigned short dummy1;
+	unsigned short dummy2;
+	unsigned short dummy3;
+	uint16_t position;											//counter value form timer
+	uint16_t acceleration;
+	//accleration function handler for other fast timer
+	//pointer to calllback function here
+}T_encoder;
+
 typedef struct t_process_params{
-	unsigned short isLightControlOn			:1;		//flag that determines wheather light control mode is active
+	unsigned short isLightControlOn			:1;		//flag that determines whether light control mode is active
 	unsigned short isPwmOutputOn			:1;		//flag for enabling power on mosfet gate pin
 	unsigned short isDeviceOn				:1;		//flag for turning on the device in selected mode after button was pressed and device goes from standby mode
 	unsigned short dummy1					:1;
@@ -31,10 +72,31 @@ typedef struct t_process_params{
 	uint16_t light_thrshld_deadarea;		//deadarea for hystheresis switching based on light readouts
 
 }t_Process_params;
+
+typedef struct t_pwm_led{
+	uint8_t isAutoCtrl			:1;		//maual or auto (light sensor) control
+	uint8_t isOn				:1;		//is chanel activated
+	uint8_t dummy2				:1;
+	uint8_t dummy3				:1;
+	uint16_t fill;					//actual oc compare value
+}T_pwm_led;
+
 extern t_System_timebase SYS_TIMEBASE;	//struct for holding timing ticks
 extern t_Process_params PROCESS_PARAMS;				//struct for holding process variables
 
+extern uint16_t lightFill;
 
-void system_ctrl(void);		//function that refreshes cotnrolled parameters after timer tick occured (currently every 1ms)
+extern T_light_params PHOTO1A;		//A-analog D-digital sensor type
+extern T_light_params PHOTO2A;
+extern T_thermal_sensor THERMI1A;
+extern T_encoder ENCODER1;
 
+extern T_pwm_led LEDSTRIP1;
+extern T_pwm_led LEDSTRIP2;
+extern T_pwm_led LEDSTRIP3;
+extern T_pwm_led LEDSTRIP4;
+
+void system_ctrl(void);		//function that refreshes cotnroled parameters after timer tick occured (currently every 1ms)
+void adc_vals_assign(void);			//copy adc values from raw buffer to proprietary structs
+void pwm_ctrl(void);				//control pwm period fill based on flag manual or auto in process for each channel separetelly eg. ch1 auto ch2 manual ch3 manual etc
 #endif /* INC_CONTROL_H_ */

@@ -23,6 +23,7 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -247,14 +248,11 @@ void TIM3_IRQHandler(void)
 	{
 //			LL_TIM_IsActiveFlag_UPDATE(TIM3);
 		LL_TIM_ClearFlag_UPDATE(TIM3);
-//		LL_TIM_OC_SetCompareCH1(TIM3, 500-1);
-//		LL_TIM_OC_SetCompareCH2(TIM3, 1000-1);
-//		LL_TIM_OC_SetCompareCH3(TIM3, 1500-1);
-//		LL_TIM_OC_SetCompareCH4(TIM3, 1750-1);
-		LL_TIM_OC_SetCompareCH1(TIM3, 1999-(uint32_t)(((TIM4->CNT)*1999)/319.0));
-		LL_TIM_OC_SetCompareCH2(TIM3, 1999-(uint32_t)(((TIM4->CNT)*1999)/319.0));
-		LL_TIM_OC_SetCompareCH3(TIM3, 1999-(uint32_t)(((TIM4->CNT)*1999)/319.0));
-		LL_TIM_OC_SetCompareCH4(TIM3, 1999-(uint32_t)(((TIM4->CNT)*1999)/319.0));
+
+		LL_TIM_OC_SetCompareCH1(TIM3, LEDSTRIP1.fill);
+		LL_TIM_OC_SetCompareCH2(TIM3, LEDSTRIP2.fill);
+		LL_TIM_OC_SetCompareCH3(TIM3, LEDSTRIP3.fill);
+		LL_TIM_OC_SetCompareCH4(TIM3, LEDSTRIP4.fill);
 	}
   /* USER CODE END TIM3_IRQn 0 */
   /* USER CODE BEGIN TIM3_IRQn 1 */

@@ -40,7 +40,7 @@ void MX_TIM4_Init(void);
 void MX_TIM9_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void timers_initialize(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

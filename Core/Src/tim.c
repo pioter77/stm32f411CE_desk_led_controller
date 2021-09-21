@@ -195,7 +195,17 @@ void MX_TIM9_Init(void)
 }
 
 /* USER CODE BEGIN 1 */
-
+void timers_initialize(void)
+{
+	  //enable led timers
+	  LL_TIM_EnableIT_UPDATE(TIM3);
+	  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH1);
+	  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH2);
+	  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH3);
+	  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
+	  LL_TIM_EnableCounter(TIM3);
+	  LL_TIM_EnableCounter(TIM4);
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

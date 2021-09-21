@@ -50,7 +50,21 @@ void MX_DMA_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
-
+void dma_initialize(void)
+{
+	  //Dma Adc enable
+	  LL_ADC_Disable(ADC1);
+	  LL_DMA_DisableStream(DMA2, LL_DMA_STREAM_0);
+	  LL_DMA_ConfigAddresses(DMA2,
+			  	  	  	  	  LL_DMA_STREAM_0,
+							  LL_ADC_DMA_GetRegAddr(ADC1, LL_ADC_DMA_REG_REGULAR_DATA),
+							  (uint32_t)&adc_readouts_bufer,
+							  LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
+	  LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_0, ADC_CONV_NUMBERS);
+	  LL_DMA_EnableIT_TC(DMA2, LL_DMA_STREAM_0);
+	  LL_DMA_EnableIT_TE(DMA2, LL_DMA_STREAM_0);
+	  LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_0);
+}
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

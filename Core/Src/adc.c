@@ -119,7 +119,19 @@ void MX_ADC1_Init(void)
 }
 
 /* USER CODE BEGIN 1 */
+void adc_initialize(void)
+{
+	  //init adc
+	  LL_ADC_EnableIT_EOCS(ADC1);
+	  LL_ADC_EnableIT_OVR(ADC1);
+	  LL_ADC_Enable(ADC1);
+}
 
+void adc_start_conv(void)
+{
+	//start adc meas
+	  LL_ADC_REG_StartConversionSWStart(ADC1);
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
