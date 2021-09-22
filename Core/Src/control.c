@@ -34,15 +34,27 @@ t_Process_params PROCESS_PARAMS={
  };
  T_pwm_led LEDSTRIP1={
 		 .fill=0,
+		 .activeMode = AUTOSENSOR,
+		 .sensitivity_threshold_low=400,
+		 .sensitivity_threshold_high=1800,
  };
  T_pwm_led LEDSTRIP2={
 		 .fill=0,
+		 .activeMode = AUTOSENSOR,
+		 .sensitivity_threshold_low=400,
+		 .sensitivity_threshold_high=1800,
  };
  T_pwm_led LEDSTRIP3={
 		 .fill=0,
+		 .activeMode = MANUAL,
+		 .sensitivity_threshold_low=400,
+		 .sensitivity_threshold_high=1800,
  };
  T_pwm_led LEDSTRIP4={
 		 .fill=0,
+		 .activeMode = MANUAL,
+		 .sensitivity_threshold_low=400,
+		 .sensitivity_threshold_high=1800,
  };
 
 
@@ -68,17 +80,41 @@ void adc_vals_assign(void)
 }
 
 void pwm_ctrl(void){
+	//set ledd fillout depending on the set mode
+	set_ligth_output(&LEDSTRIP1, PHOTO1A.readout_act);
+	set_ligth_output(&LEDSTRIP2, PHOTO1A.readout_act);
+	set_ligth_output(&LEDSTRIP3, PHOTO1A.readout_act);
+	set_ligth_output(&LEDSTRIP4, PHOTO1A.readout_act);
+}
+
+//linear aproximation or exponent aproximation between 2 predefined levels of sensitivity
+uint16_t calculate_light_output(uint16_t sensor,T_pwm_led *led,_Bool linearOutput)
+{
+//	sensor=4095-sensor;
+	if(sensor>4095)		return 0;	//readout error, sensor is 12 bit only
+	if(sensor<led->sensitivity_threshold_low) 		return 0;				//full off
+	else if(sensor>led->sensitivity_threshold_high) return (uint16_t)LEDSTRIPS_ARR;	//full on
+	else if(linearOutput){													//when calculating output from linear function
+		if(led->sensitivity_threshold_low>=led->sensitivity_threshold_high || led->sensitivity_threshold_high==0 || led->sensitivity_threshold_low==0) return 0;	//threshold values set incorrectly, ignore, cut off power
+		return ((LEDSTRIPS_ARR*(sensor-led->sensitivity_threshold_low))/(led->sensitivity_threshold_high-led->sensitivity_threshold_low));
+	}else{																	//when calculating output from exponent function
+		return 0;//todo:implement
+	}
+//	return 0;//out;
+}
+
+//function that based on current mode for invoked led sets the led's fill
+void set_ligth_output(T_pwm_led *led, uint16_t sensor)
+{
 	uint16_t encoder_set=TIM4->CNT;
 	uint16_t encoder_max=LL_TIM_GetAutoReload(TIM4);
 	uint16_t led_max= LL_TIM_GetAutoReload(TIM3);
 
+	//todo: make sure led is enabled with :
+//	if(led->isOn)
 	//when manual mode:
-//	LEDSTRIP1.fill= led_max-(uint32_t)((encoder_set*led_max)/(float)encoder_max);
-	LEDSTRIP2.fill= led_max-(uint32_t)((encoder_set*led_max)/(float)encoder_max);
-	LEDSTRIP3.fill= led_max-(uint32_t)((encoder_set*led_max)/(float)encoder_max);
-	LEDSTRIP4.fill= led_max-(uint32_t)((encoder_set*led_max)/(float)encoder_max);
-
-//	when auto mode:
-	LEDSTRIP1.fill= led_max-(uint32_t)(((PHOTO1A.readout_act-2047)*led_max)/(float)2047);
+	if(led->activeMode==MANUAL) led->fill= led_max-(uint32_t)((encoder_set*led_max)/(float)encoder_max);
+	else if(led->activeMode==AUTOSENSOR) led->fill = calculate_light_output(sensor,led,1);
+	else if(led->activeMode==AUTOTIME)	1;	//todo:yet to implement
+	else led->fill = 0;					//error:mode not set
 }
-

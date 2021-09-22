@@ -107,41 +107,6 @@ int main(void)
   MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
 
-//  //enable led timers
-//  LL_TIM_EnableIT_UPDATE(TIM3);
-//  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH1);
-//  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH2);
-//  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH3);
-//  LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH4);
-//  LL_TIM_EnableCounter(TIM3);
-//  LL_TIM_EnableCounter(TIM4);
-
-//  //Dma Adc enable
-//  LL_ADC_Disable(ADC1);
-//  LL_DMA_DisableStream(DMA2, LL_DMA_STREAM_0);
-//  LL_DMA_ConfigAddresses(DMA2,
-//		  	  	  	  	  LL_DMA_STREAM_0,
-//						  LL_ADC_DMA_GetRegAddr(ADC1, LL_ADC_DMA_REG_REGULAR_DATA),
-//						  (uint32_t)&adc_readouts_bufer,
-//						  LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
-//  LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_0, 4);
-//  LL_DMA_EnableIT_TC(DMA2, LL_DMA_STREAM_0);
-//  LL_DMA_EnableIT_TE(DMA2, LL_DMA_STREAM_0);
-//  LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_0);
-//  //init adc
-//  LL_ADC_EnableIT_EOCS(ADC1);
-//  LL_ADC_EnableIT_OVR(ADC1);
-//  LL_ADC_Enable(ADC1);
-  //start adc meas
-//  LL_ADC_REG_StartConversionSWStart(ADC1);
-//  LL_ADC_c
-
-  //  LL_ADC_EnableIT_EOCS(ADC1);
-//  LL_ADC_REG_SetSequencerRanks(ADC1, Rank, Channel)
-//  LL_ADC_Enable(ADC1);
-//  LL_ADC_
-//  LL_mDelay(1);
-//  LL_ADC_REG_StartConversionSWStart(ADC1);
   hardware_initialize();
   /* USER CODE END 2 */
 
@@ -153,15 +118,7 @@ int main(void)
 	  //WITHOUT THIS IT WONT WORK!!!!, DO IT AFTER EACH CODE GENERATION!
 	  adc_vals_assign();
 	  pwm_ctrl();
-//	  lightFill=adc_readouts_bufer[0];
-//	  LL_mDelay(2000);
-//	  LL_ADC_ClearFlag_EOCS(ADC1);
-////	  LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_LIMITED);
-//	  LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_0, 4);//LL_ADC_REG_GetSequencerLength(ADC1));	//todo: check whether last argument function call returns proper values
-//	  LL_DMA_SetMemoryAddress(DMA2, LL_DMA_STREAM_0, (uint32_t)adc_readouts_bufer);
-//	  LL_DMA_SetPeriphAddress(DMA2, LL_DMA_STREAM_0, LL_ADC_DMA_GetRegAddr(ADC1, LL_ADC_DMA_REG_REGULAR_DATA));
-//	  LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_0);
-//	  LL_ADC_REG_StartConversionSWStart(ADC1);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

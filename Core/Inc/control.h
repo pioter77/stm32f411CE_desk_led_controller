@@ -11,6 +11,8 @@
 #include "main.h"
 #include "defines.h"
 
+enum ledstripsStates{MANUAL=1, AUTOSENSOR, AUTOTIME};
+
 typedef struct t_system_timebase{
 	_Bool system_1ms_tick;
 }t_System_timebase;
@@ -24,10 +26,10 @@ typedef struct t_light_params{
 	uint16_t array_med[8];				//array for holding values to filter
 	uint16_t dividerOhm;				// voltage divider resistor value
 	uint16_t sensorOhm;				// photoresistor nominal resistance value
-	unsigned short isEnabled    :1;		//flag that shows whether we should process the value and perform action on it
-	unsigned short dummy1		:1;
-	unsigned short dummy2		:1;
-	unsigned short dummy3		:1;
+	uint8_t isEnabled   :1;		//flag that shows whether we should process the value and perform action on it
+	uint8_t dummy1		:1;
+	uint8_t dummy2		:1;
+	uint8_t dummy3		:1;
 }T_light_params;
 
 typedef struct t_thermal_sensor{
@@ -37,10 +39,10 @@ typedef struct t_thermal_sensor{
 	uint16_t array_med[8];				//array for holding values to filter
 	uint16_t dividerOhm;				// voltage divider resistor value
 	uint16_t sensorOhm;				// photoresistor nominal resistance value
-	unsigned short isEnabled    :1;		//flag that shows whether we should process the value and perform action on it
-	unsigned short isNTC		:1;		//ntc or ptc type
-	unsigned short dummy2		:1;
-	unsigned short dummy3		:1;
+	uint8_t isEnabled    :1;		//flag that shows whether we should process the value and perform action on it
+	uint8_t isNTC		:1;		//ntc or ptc type
+	uint8_t dummy2		:1;
+	uint8_t dummy3		:1;
 }T_thermal_sensor;
 
 typedef struct t_encoder{
@@ -74,11 +76,16 @@ typedef struct t_process_params{
 }t_Process_params;
 
 typedef struct t_pwm_led{
-	uint8_t isAutoCtrl			:1;		//maual or auto (light sensor) control
+	uint8_t activeMode			:2;		//1 for manual 2 for automatic based on light sensor 3 automatic based on predefined rtc time values
+	uint8_t isAutoCtrlLight		:1;		//maual or auto (light sensor) control
 	uint8_t isOn				:1;		//is chanel activated
 	uint8_t dummy2				:1;
 	uint8_t dummy3				:1;
 	uint16_t fill;					//actual oc compare value
+
+	//for auto mode:
+	uint16_t sensitivity_threshold_low;		//adc readout value after which leds start to light up
+	uint16_t sensitivity_threshold_high;	//adc readout vlaue after which leds are fully on
 }T_pwm_led;
 
 extern t_System_timebase SYS_TIMEBASE;	//struct for holding timing ticks
@@ -99,4 +106,8 @@ extern T_pwm_led LEDSTRIP4;
 void system_ctrl(void);		//function that refreshes cotnroled parameters after timer tick occured (currently every 1ms)
 void adc_vals_assign(void);			//copy adc values from raw buffer to proprietary structs
 void pwm_ctrl(void);				//control pwm period fill based on flag manual or auto in process for each channel separetelly eg. ch1 auto ch2 manual ch3 manual etc
+
+uint16_t calculate_light_output(uint16_t sensor,T_pwm_led *led,_Bool linearOutput);
+void set_ligth_output(T_pwm_led *led, uint16_t sensor);
+
 #endif /* INC_CONTROL_H_ */
