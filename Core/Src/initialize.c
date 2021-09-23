@@ -15,3 +15,4 @@ void hardware_initialize(void)
 	adc_initialize();
 	adc_start_conv();
 }
+

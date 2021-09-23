@@ -118,3 +118,19 @@ void set_ligth_output(T_pwm_led *led, uint16_t sensor)
 	else if(led->activeMode==AUTOTIME)	1;	//todo:yet to implement
 	else led->fill = 0;					//error:mode not set
 }
+
+//encoder action function, handdles encoder control in main.c
+void encoder_ctrl(T_encoder *encoder)
+{
+	if(encoder->isBtnPressed)
+	{
+		encoder->isBtnPressed=0;	//clar action flag
+		//action to perform when encoder pressed here:
+	}
+}
+
+//isr button pressed on encoder callback
+void encoder_btn_callback(T_encoder *encoder)
+{
+	encoder->isBtnPressed=1;
+}

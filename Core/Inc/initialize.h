@@ -12,6 +12,8 @@
 #include "control.h"
 #include "defines.h"
 #include "tim.h"
+
 void hardware_initialize(void);
+
 
 #endif /* INC_INITIALIZE_H_ */

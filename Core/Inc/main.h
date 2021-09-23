@@ -89,6 +89,7 @@ void Error_Handler(void);
 #define ENCODER_DT_GPIO_Port GPIOB
 #define ENCODER_BTN_Pin LL_GPIO_PIN_8
 #define ENCODER_BTN_GPIO_Port GPIOB
+#define ENCODER_BTN_EXTI_IRQn EXTI9_5_IRQn
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
                                                                  4 bits for subpriority */

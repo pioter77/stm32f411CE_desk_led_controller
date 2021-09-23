@@ -109,5 +109,7 @@ void pwm_ctrl(void);				//control pwm period fill based on flag manual or auto i
 
 uint16_t calculate_light_output(uint16_t sensor,T_pwm_led *led,_Bool linearOutput);
 void set_ligth_output(T_pwm_led *led, uint16_t sensor);
+void encoder_ctrl(T_encoder *encoder);
+void encoder_ctrl(T_encoder *encoder);
 
 #endif /* INC_CONTROL_H_ */

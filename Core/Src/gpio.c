@@ -64,6 +64,10 @@ void MX_GPIO_Init(void)
   /**/
   LL_GPIO_SetPinMode(ENCODER_BTN_GPIO_Port, ENCODER_BTN_Pin, LL_GPIO_MODE_INPUT);
 
+  /* EXTI interrupt init*/
+  NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
+  NVIC_EnableIRQ(EXTI9_5_IRQn);
+
 }
 
 /* USER CODE BEGIN 2 */

@@ -209,19 +209,39 @@ void ADC_IRQHandler(void)
 if(LL_ADC_IsActiveFlag_EOCS(ADC1))
 {
 	LL_ADC_ClearFlag_EOCS(ADC1);
-	volatile uint8_t dbg1=0;
+//	volatile uint8_t dbg1=0;
 }
 if(LL_ADC_IsActiveFlag_OVR(ADC1))
 {
 //	LL_ADC_ClearFlag_OVR(ADC1);
 	LL_ADC_DisableIT_OVR(ADC1);
-	volatile uint8_t dbg=0;
+//	volatile uint8_t dbg=0;
 }
   /* USER CODE END ADC_IRQn 0 */
 
   /* USER CODE BEGIN ADC_IRQn 1 */
 
   /* USER CODE END ADC_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI line[9:5] interrupts.
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+
+  /* USER CODE END EXTI9_5_IRQn 0 */
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_8) != RESET)
+  {
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_8);
+    /* USER CODE BEGIN LL_EXTI_LINE_8 */
+    encoder_btn_callback(&ENCODER1);
+    /* USER CODE END LL_EXTI_LINE_8 */
+  }
+  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+
+  /* USER CODE END EXTI9_5_IRQn 1 */
 }
 
 /**
@@ -269,17 +289,6 @@ void DMA2_Stream0_IRQHandler(void)
 	if(LL_DMA_IsActiveFlag_TC0(DMA2))
 			{
 				LL_DMA_ClearFlag_TC0(DMA2);
-//				LL_DMA_DisableStream(DMA2, LL_DMA_STREAM_0);
-//				CLEAR_BIT(ADC1->CR2, ADC_CR2_DDS);
-//				LL_ADC_DMA
-
-//				  LL_ADC_ClearFlag_EOCS(ADC1);
-//			//	  LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_LIMITED);
-//				  LL_DMA_SetDataLength(DMA2, LL_DMA_STREAM_0, 4);//LL_ADC_REG_GetSequencerLength(ADC1));	//todo: check whether last argument function call returns proper values
-//				  LL_DMA_SetMemoryAddress(DMA2, LL_DMA_STREAM_0, (uint32_t)adc_readouts_bufer);
-//				  LL_DMA_SetPeriphAddress(DMA2, LL_DMA_STREAM_0, LL_ADC_DMA_GetRegAddr(ADC1, LL_ADC_DMA_REG_REGULAR_DATA));
-//				  LL_DMA_EnableStream(DMA2, LL_DMA_STREAM_0);
-//				  LL_ADC_REG_StartConversionSWStart(ADC1);
 			    /* USER CODE END WHILE */
 			}
 	if(LL_DMA_IsActiveFlag_TE0(DMA2))

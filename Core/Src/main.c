@@ -100,10 +100,8 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM4_Init();
   MX_TIM3_Init();
-
-  MX_DMA_Init();
   MX_ADC1_Init();
-
+  MX_DMA_Init();
   MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
 
@@ -118,6 +116,7 @@ int main(void)
 	  //WITHOUT THIS IT WONT WORK!!!!, DO IT AFTER EACH CODE GENERATION!
 	  adc_vals_assign();
 	  pwm_ctrl();
+	  encoder_ctrl(&ENCODER1);
 
     /* USER CODE END WHILE */
 
