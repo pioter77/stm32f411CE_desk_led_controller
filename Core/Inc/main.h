@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f4xx_hal.h"
 
 #include "stm32f4xx_ll_adc.h"
 #include "stm32f4xx_ll_dma.h"
@@ -38,12 +39,9 @@ extern "C" {
 #include "stm32f4xx_ll_cortex.h"
 #include "stm32f4xx_ll_utils.h"
 #include "stm32f4xx_ll_pwr.h"
+#include "stm32f4xx_ll_spi.h"
 #include "stm32f4xx_ll_tim.h"
 #include "stm32f4xx_ll_gpio.h"
-
-#if defined(USE_FULL_ASSERT)
-#include "stm32_assert.h"
-#endif /* USE_FULL_ASSERT */
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -75,33 +73,15 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LIGHT_SENS1_Pin LL_GPIO_PIN_1
 #define LIGHT_SENS1_GPIO_Port GPIOA
-#define LED1_PWM_Pin LL_GPIO_PIN_6
-#define LED1_PWM_GPIO_Port GPIOA
-#define LED2_PWM_Pin LL_GPIO_PIN_7
-#define LED2_PWM_GPIO_Port GPIOA
-#define LED3_PWM_Pin LL_GPIO_PIN_0
-#define LED3_PWM_GPIO_Port GPIOB
-#define LED4_PWM_Pin LL_GPIO_PIN_1
-#define LED4_PWM_GPIO_Port GPIOB
+#define SPI_CS_Pin LL_GPIO_PIN_4
+#define SPI_CS_GPIO_Port GPIOA
+#define ENCODER1_BTN_Pin LL_GPIO_PIN_5
+#define ENCODER1_BTN_GPIO_Port GPIOB
+#define ENCODER1_BTN_EXTI_IRQn EXTI9_5_IRQn
 #define ENCODER_CLK_Pin LL_GPIO_PIN_6
 #define ENCODER_CLK_GPIO_Port GPIOB
 #define ENCODER_DT_Pin LL_GPIO_PIN_7
 #define ENCODER_DT_GPIO_Port GPIOB
-#define ENCODER_BTN_Pin LL_GPIO_PIN_8
-#define ENCODER_BTN_GPIO_Port GPIOB
-#define ENCODER_BTN_EXTI_IRQn EXTI9_5_IRQn
-#ifndef NVIC_PRIORITYGROUP_0
-#define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
-                                                                 4 bits for subpriority */
-#define NVIC_PRIORITYGROUP_1         ((uint32_t)0x00000006) /*!< 1 bit  for pre-emption priority,
-                                                                 3 bits for subpriority */
-#define NVIC_PRIORITYGROUP_2         ((uint32_t)0x00000005) /*!< 2 bits for pre-emption priority,
-                                                                 2 bits for subpriority */
-#define NVIC_PRIORITYGROUP_3         ((uint32_t)0x00000004) /*!< 3 bits for pre-emption priority,
-                                                                 1 bit  for subpriority */
-#define NVIC_PRIORITYGROUP_4         ((uint32_t)0x00000003) /*!< 4 bits for pre-emption priority,
-                                                                 0 bit  for subpriority */
-#endif
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

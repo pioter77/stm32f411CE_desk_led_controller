@@ -106,9 +106,9 @@ uint16_t calculate_light_output(uint16_t sensor,T_pwm_led *led,_Bool linearOutpu
 //function that based on current mode for invoked led sets the led's fill
 void set_ligth_output(T_pwm_led *led, uint16_t sensor)
 {
-	uint16_t encoder_set=TIM4->CNT;
+	volatile uint16_t encoder_set=TIM4->CNT;
 	uint16_t encoder_max=LL_TIM_GetAutoReload(TIM4);
-	uint16_t led_max= LL_TIM_GetAutoReload(TIM3);
+	uint16_t led_max= LL_TIM_GetAutoReload(TIM4);
 
 	//todo: make sure led is enabled with :
 //	if(led->isOn)

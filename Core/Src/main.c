@@ -21,6 +21,8 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "i2c.h"
+#include "spi.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -75,15 +77,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-
-  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-
-  NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-
-  /* System interrupt init*/
-  /* SysTick_IRQn interrupt configuration */
-  NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),15, 0));
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -99,10 +93,12 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM4_Init();
-  MX_TIM3_Init();
   MX_ADC1_Init();
   MX_DMA_Init();
   MX_TIM9_Init();
+  MX_TIM1_Init();
+  MX_SPI1_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
   hardware_initialize();
@@ -161,8 +157,13 @@ void SystemClock_Config(void)
   {
 
   }
-  LL_Init1msTick(100000000);
   LL_SetSystemCoreClock(100000000);
+
+   /* Update the time base */
+  if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)
+  {
+    Error_Handler();
+  }
   LL_RCC_SetTIMPrescaler(LL_RCC_TIM_PRESCALER_TWICE);
 }
 

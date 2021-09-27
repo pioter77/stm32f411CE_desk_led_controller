@@ -42,16 +42,22 @@ void MX_ADC1_Init(void)
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC1);
 
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
   /**ADC1 GPIO Configuration
   PA1   ------> ADC1_IN1
   PA2   ------> ADC1_IN2
   PA3   ------> ADC1_IN3
-  PA4   ------> ADC1_IN4
+  PB0   ------> ADC1_IN8
   */
-  GPIO_InitStruct.Pin = LIGHT_SENS1_Pin|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4;
+  GPIO_InitStruct.Pin = LIGHT_SENS1_Pin|LL_GPIO_PIN_2|LL_GPIO_PIN_3;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* ADC1 DMA Init */
 
@@ -106,12 +112,12 @@ void MX_ADC1_Init(void)
   LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_2, LL_ADC_SAMPLINGTIME_28CYCLES);
   /** Configure Regular Channel
   */
-  LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_3, LL_ADC_CHANNEL_4);
-  LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_4, LL_ADC_SAMPLINGTIME_28CYCLES);
+  LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_3, LL_ADC_CHANNEL_3);
+  LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_3, LL_ADC_SAMPLINGTIME_28CYCLES);
   /** Configure Regular Channel
   */
-  LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_4, LL_ADC_CHANNEL_4);
-  LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_4, LL_ADC_SAMPLINGTIME_28CYCLES);
+  LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_4, LL_ADC_CHANNEL_8);
+  LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_8, LL_ADC_SAMPLINGTIME_28CYCLES);
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
