@@ -7,6 +7,7 @@
 
 
 #include "control.h"
+#include "gpio.h"
 
 volatile uint16_t adc_readouts_bufer[4]={[0 ... 3]=0};
 
@@ -57,6 +58,25 @@ t_Process_params PROCESS_PARAMS={
 		 .sensitivity_threshold_high=1800,
  };
 
+T_rel_params REL0STAT={
+	  .isOn=0,
+	  .isAutoCtrl=0,
+	  .relPort=GPIOA,
+	  .relPin=LL_GPIO_PIN_10,
+};
+T_rel_params REL1STAT={
+	  .isOn=0,
+	  .isAutoCtrl=0,
+	  .relPort=GPIOA,
+	  .relPin=LL_GPIO_PIN_9,
+};
+T_rel_params REL2STAT={
+	  .isOn=0,
+	  .isAutoCtrl=0,
+	  .relPort=GPIOC,
+	  .relPin=LL_GPIO_PIN_13,
+};
+
 
 
 void system_ctrl(void)
@@ -106,8 +126,8 @@ uint16_t calculate_light_output(uint16_t sensor,T_pwm_led *led,_Bool linearOutpu
 //function that based on current mode for invoked led sets the led's fill
 void set_ligth_output(T_pwm_led *led, uint16_t sensor)
 {
-	volatile uint16_t encoder_set=TIM4->CNT;
-	uint16_t encoder_max=LL_TIM_GetAutoReload(TIM4);
+	volatile uint16_t encoder_set=TIM2->CNT;
+	uint16_t encoder_max=LL_TIM_GetAutoReload(TIM2);
 	uint16_t led_max= LL_TIM_GetAutoReload(TIM4);
 
 	//todo: make sure led is enabled with :
@@ -133,4 +153,23 @@ void encoder_ctrl(T_encoder *encoder)
 void encoder_btn_callback(T_encoder *encoder)
 {
 	encoder->isBtnPressed=1;
+}
+//function for handling all actions for relay
+void rel_ctrl(T_rel_params *rel){
+
+	//todo: futher implementation
+	if(rel->isOn) LL_GPIO_ResetOutputPin(rel->relPort, rel->relPin);
+	else LL_GPIO_SetOutputPin(rel->relPort, rel->relPin);
+}
+
+//isr relay remote signal exti callback
+void rel_callback(T_rel_params *rel){
+	if(rel->isOn) rel->isOn=0;
+	else rel->isOn=1;
+}
+
+void rel_AZ5callback(T_rel_params *relX,T_rel_params *relY,T_rel_params *relZ){
+	 relX->isOn=0;
+	 relY->isOn=0;
+	 relZ->isOn=0;
 }

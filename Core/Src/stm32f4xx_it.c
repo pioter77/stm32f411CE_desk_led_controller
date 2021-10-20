@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "control.h"
+#include "OLED_SSD1306.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,8 +58,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern DMA_HandleTypeDef hdma_i2c1_tx;
-extern I2C_HandleTypeDef hi2c1;
+extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -202,20 +202,6 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles DMA1 stream1 global interrupt.
-  */
-void DMA1_Stream1_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Stream1_IRQn 0 */
-
-  /* USER CODE END DMA1_Stream1_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_i2c1_tx);
-  /* USER CODE BEGIN DMA1_Stream1_IRQn 1 */
-
-  /* USER CODE END DMA1_Stream1_IRQn 1 */
-}
-
-/**
   * @brief This function handles ADC1 global interrupt.
   */
 void ADC_IRQHandler(void)
@@ -260,40 +246,66 @@ void EXTI9_5_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.
+  * @brief This function handles TIM4 global interrupt.
   */
-void TIM1_UP_TIM10_IRQHandler(void)
+void TIM4_IRQHandler(void)
 {
-  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 0 */
-	if(LL_TIM_IsActiveFlag_UPDATE(TIM1))
+  /* USER CODE BEGIN TIM4_IRQn 0 */
+	if(LL_TIM_IsActiveFlag_UPDATE(TIM4))
 	{
 //			LL_TIM_IsActiveFlag_UPDATE(TIM3);
-		LL_TIM_ClearFlag_UPDATE(TIM1);
+		LL_TIM_ClearFlag_UPDATE(TIM4);
 
-		LL_TIM_OC_SetCompareCH1(TIM1, LEDSTRIP1.fill);
-		LL_TIM_OC_SetCompareCH2(TIM1, LEDSTRIP2.fill);
-		LL_TIM_OC_SetCompareCH3(TIM1, LEDSTRIP3.fill);
-		LL_TIM_OC_SetCompareCH4(TIM1, LEDSTRIP4.fill);
+		LL_TIM_OC_SetCompareCH1(TIM4, LEDSTRIP1.fill);
+		LL_TIM_OC_SetCompareCH2(TIM4, LEDSTRIP2.fill);
+		LL_TIM_OC_SetCompareCH3(TIM4, LEDSTRIP3.fill);
+		LL_TIM_OC_SetCompareCH4(TIM4, LEDSTRIP4.fill);
 	}
-  /* USER CODE END TIM1_UP_TIM10_IRQn 0 */
+  /* USER CODE END TIM4_IRQn 0 */
+  /* USER CODE BEGIN TIM4_IRQn 1 */
 
-  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */
-
-  /* USER CODE END TIM1_UP_TIM10_IRQn 1 */
+  /* USER CODE END TIM4_IRQn 1 */
 }
 
 /**
-  * @brief This function handles I2C1 event interrupt.
+  * @brief This function handles EXTI line[15:10] interrupts.
   */
-void I2C1_EV_IRQHandler(void)
+void EXTI15_10_IRQHandler(void)
 {
-  /* USER CODE BEGIN I2C1_EV_IRQn 0 */
+  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
 
-  /* USER CODE END I2C1_EV_IRQn 0 */
-  HAL_I2C_EV_IRQHandler(&hi2c1);
-  /* USER CODE BEGIN I2C1_EV_IRQn 1 */
+  /* USER CODE END EXTI15_10_IRQn 0 */
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_12) != RESET)
+  {
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_12);
+    /* USER CODE BEGIN LL_EXTI_LINE_12 */
+    rel_callback(&REL0STAT);
+    /* USER CODE END LL_EXTI_LINE_12 */
+  }
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_13) != RESET)
+  {
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_13);
+    /* USER CODE BEGIN LL_EXTI_LINE_13 */
+    rel_callback(&REL1STAT);
+    /* USER CODE END LL_EXTI_LINE_13 */
+  }
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_14) != RESET)
+  {
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_14);
+    /* USER CODE BEGIN LL_EXTI_LINE_14 */
+    rel_callback(&REL2STAT);
+    /* USER CODE END LL_EXTI_LINE_14 */
+  }
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_15) != RESET)
+  {
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_15);
+    /* USER CODE BEGIN LL_EXTI_LINE_15 */
+    rel_AZ5callback(&REL0STAT,&REL1STAT,&REL2STAT);
+    /* USER CODE END LL_EXTI_LINE_15 */
+  }
+  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
 
-  /* USER CODE END I2C1_EV_IRQn 1 */
+  /* USER CODE END EXTI15_10_IRQn 1 */
 }
 
 /**
@@ -317,6 +329,20 @@ void DMA2_Stream0_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
 
   /* USER CODE END DMA2_Stream0_IRQn 1 */
+}
+
+/**
+  * @brief This function handles USB On The Go FS global interrupt.
+  */
+void OTG_FS_IRQHandler(void)
+{
+  /* USER CODE BEGIN OTG_FS_IRQn 0 */
+
+  /* USER CODE END OTG_FS_IRQn 0 */
+  HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);
+  /* USER CODE BEGIN OTG_FS_IRQn 1 */
+
+  /* USER CODE END OTG_FS_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

@@ -24,12 +24,19 @@
 #include "i2c.h"
 #include "spi.h"
 #include "tim.h"
+#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "control.h"
 #include "initialize.h"
+#include "usbd_cdc_if.h"
+#include "string.h"
+//#include "OLED_SSD1306.h"
+//#include "GFX_BW.h"
+//#include "fonts/fonts.h"
+//#include "picture.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,7 +68,8 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
+char *data= "hallo form microcontroller!\n";
+uint8_t rec_buffer[512]={[0 ... 511] = 0};
 /* USER CODE END 0 */
 
 /**
@@ -93,12 +101,14 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM4_Init();
-  MX_ADC1_Init();
   MX_DMA_Init();
+  MX_ADC1_Init();
+
   MX_TIM9_Init();
-  MX_TIM1_Init();
   MX_SPI1_Init();
-  MX_I2C1_Init();
+  MX_TIM2_Init();
+  MX_USB_DEVICE_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 
   hardware_initialize();
@@ -113,6 +123,26 @@ int main(void)
 	  adc_vals_assign();
 	  pwm_ctrl();
 	  encoder_ctrl(&ENCODER1);
+	  rel_ctrl(&REL0STAT);
+	  rel_ctrl(&REL1STAT);
+	  rel_ctrl(&REL2STAT);
+//	  CDC_Transmit_FS((uint8_t *)data, strlen(data));
+//	  LL_mDelay(1000);
+	  //rysowanie ma sie odbywac tylko jak dma zakoczy trasfer poprzedniej ramki
+//	  if(LL_DMA_IsActiveFlag_TC0(DMAx){
+//	  if(Oled1.dmaFinished)
+//	  {
+//		  	SSD1306_Clear(BLACK,Oled1.frameBuffer);
+//			GFX_DrawString(10,10, "21", WHITE, BLACK,Oled1.frameBuffer);
+//
+//			GFX_DrawString(10,20, "37", WHITE, BLACK,Oled1.frameBuffer);
+//			GFX_DrawString(19,40, "www.msalamon.pl", WHITE, BLACK,Oled1.frameBuffer);
+//	//		frames++;
+//	//		HAL_GPIO_WritePin(TEST_GPIO_Port, TEST_Pin, 1);
+//			SSD1306_Display();
+//	  }
+
+//  }
 
     /* USER CODE END WHILE */
 
@@ -139,7 +169,8 @@ void SystemClock_Config(void)
   {
 
   }
-  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_12, 96, LL_RCC_PLLP_DIV_2);
+  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_25, 192, LL_RCC_PLLP_DIV_2);
+  LL_RCC_PLL_ConfigDomain_48M(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_25, 192, LL_RCC_PLLQ_DIV_4);
   LL_RCC_PLL_Enable();
 
    /* Wait till PLL is ready */
@@ -157,7 +188,7 @@ void SystemClock_Config(void)
   {
 
   }
-  LL_SetSystemCoreClock(100000000);
+  LL_SetSystemCoreClock(96000000);
 
    /* Update the time base */
   if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)

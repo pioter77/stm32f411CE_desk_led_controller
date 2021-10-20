@@ -88,6 +88,17 @@ typedef struct t_pwm_led{
 	uint16_t sensitivity_threshold_high;	//adc readout vlaue after which leds are fully on
 }T_pwm_led;
 
+typedef struct t_rel_params{
+	_Bool isOn;								//status flag
+	_Bool isAutoCtrl;						//auto (timeout) or manual (button) control
+	_Bool timeoutOccured;					//flag set when rel timeout reached
+	uint16_t timeNowOn;						//count of seconds passed since turn on, when this == timeoutval then turn off light
+	uint16_t timeOutVal;					//seconds after which light will be shut down (reinit value)
+	GPIO_TypeDef* relPort;					//associated port for rel output pin
+	uint32_t relPin;						//associated pin for rel output pin
+
+}T_rel_params;
+
 extern t_System_timebase SYS_TIMEBASE;	//struct for holding timing ticks
 extern t_Process_params PROCESS_PARAMS;				//struct for holding process variables
 
@@ -103,6 +114,10 @@ extern T_pwm_led LEDSTRIP2;
 extern T_pwm_led LEDSTRIP3;
 extern T_pwm_led LEDSTRIP4;
 
+extern T_rel_params REL0STAT;
+extern T_rel_params REL1STAT;
+extern T_rel_params REL2STAT;
+
 void system_ctrl(void);		//function that refreshes cotnroled parameters after timer tick occured (currently every 1ms)
 void adc_vals_assign(void);			//copy adc values from raw buffer to proprietary structs
 void pwm_ctrl(void);				//control pwm period fill based on flag manual or auto in process for each channel separetelly eg. ch1 auto ch2 manual ch3 manual etc
@@ -111,5 +126,7 @@ uint16_t calculate_light_output(uint16_t sensor,T_pwm_led *led,_Bool linearOutpu
 void set_ligth_output(T_pwm_led *led, uint16_t sensor);
 void encoder_ctrl(T_encoder *encoder);
 void encoder_ctrl(T_encoder *encoder);
+void rel_ctrl(T_rel_params *rel);
+void rel_callback(T_rel_params *rel);
 
 #endif /* INC_CONTROL_H_ */

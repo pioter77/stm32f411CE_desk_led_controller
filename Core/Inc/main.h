@@ -71,17 +71,35 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define REL2_Pin LL_GPIO_PIN_13
+#define REL2_GPIO_Port GPIOC
 #define LIGHT_SENS1_Pin LL_GPIO_PIN_1
 #define LIGHT_SENS1_GPIO_Port GPIOA
 #define SPI_CS_Pin LL_GPIO_PIN_4
 #define SPI_CS_GPIO_Port GPIOA
+#define REMOTE_IN3_Pin LL_GPIO_PIN_12
+#define REMOTE_IN3_GPIO_Port GPIOB
+#define REMOTE_IN3_EXTI_IRQn EXTI15_10_IRQn
+#define REMOTE_IN2_Pin LL_GPIO_PIN_13
+#define REMOTE_IN2_GPIO_Port GPIOB
+#define REMOTE_IN2_EXTI_IRQn EXTI15_10_IRQn
+#define REMOTE_IN1_Pin LL_GPIO_PIN_14
+#define REMOTE_IN1_GPIO_Port GPIOB
+#define REMOTE_IN1_EXTI_IRQn EXTI15_10_IRQn
+#define REMOTE_IN0_Pin LL_GPIO_PIN_15
+#define REMOTE_IN0_GPIO_Port GPIOB
+#define REMOTE_IN0_EXTI_IRQn EXTI15_10_IRQn
+#define REL1_Pin LL_GPIO_PIN_9
+#define REL1_GPIO_Port GPIOA
+#define REL0_Pin LL_GPIO_PIN_10
+#define REL0_GPIO_Port GPIOA
+#define ENCODER_DT2_Pin LL_GPIO_PIN_15
+#define ENCODER_DT2_GPIO_Port GPIOA
+#define ENCODER_CLK2_Pin LL_GPIO_PIN_3
+#define ENCODER_CLK2_GPIO_Port GPIOB
 #define ENCODER1_BTN_Pin LL_GPIO_PIN_5
 #define ENCODER1_BTN_GPIO_Port GPIOB
 #define ENCODER1_BTN_EXTI_IRQn EXTI9_5_IRQn
-#define ENCODER_CLK_Pin LL_GPIO_PIN_6
-#define ENCODER_CLK_GPIO_Port GPIOB
-#define ENCODER_DT_Pin LL_GPIO_PIN_7
-#define ENCODER_DT_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
